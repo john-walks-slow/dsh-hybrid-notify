@@ -34,12 +34,14 @@ export const zh = {
 	"settings.events.planReviewRequest": "计划审批请求",
 	"settings.events.agentError": "Agent 错误",
 	"settings.events.jobComplete": "后台任务完成",
+	"settings.events.subagentComplete": "子代理完成",
 	"notify.turnComplete": "任务完成",
 	"notify.approvalRequest": "需要授权",
 	"notify.questionRequest": "等待你的回答",
 	"notify.planReviewRequest": "等待你审批计划",
 	"notify.agentError": "Agent 出错了",
 	"notify.jobComplete": "后台任务完成",
+	"notify.subagentComplete": "子代理完成",
 	"toast.close": "关闭",
 };
 
@@ -72,11 +74,13 @@ export const en = {
 	"settings.events.planReviewRequest": "Plan review request",
 	"settings.events.agentError": "Agent error",
 	"settings.events.jobComplete": "Background job complete",
+	"settings.events.subagentComplete": "Subagent complete",
 	"notify.turnComplete": "Task complete",
 	"notify.approvalRequest": "Approval required",
 	"notify.questionRequest": "Waiting for your answer",
 	"notify.planReviewRequest": "Waiting for plan review",
 	"notify.agentError": "Agent error",
 	"notify.jobComplete": "Background job complete",
+	"notify.subagentComplete": "Subagent complete",
 	"toast.close": "Close",
 };

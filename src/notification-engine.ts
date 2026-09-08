@@ -231,10 +231,9 @@ function createEngine(
 
 			// ── Turn complete: running → idle ──
 			if (prev.running === true && summary.running === false) {
-				// Subagent completions are classified as jobComplete (background task),
-				// so the "后台任务完成" / "Background job complete" toggle controls them
+				// Subagent completions have their own event type
 				if (summary.origin === "subagent") {
-					notify("jobComplete", id, t("notify.jobComplete"), getSessionTitle(snap, id), "success");
+					notify("subagentComplete", id, t("notify.subagentComplete"), getSessionTitle(snap, id), "success");
 				} else {
 					notify("turnComplete", id, t("notify.turnComplete"), getSessionTitle(snap, id), "success");
 				}

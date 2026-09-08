@@ -27,6 +27,7 @@ const EVENT_KEYS: NotificationEvent[] = [
 	"planReviewRequest",
 	"agentError",
 	"jobComplete",
+	"subagentComplete",
 ];
 
 const EVENT_LABELS: Record<NotificationEvent, string> = {
@@ -36,6 +37,7 @@ const EVENT_LABELS: Record<NotificationEvent, string> = {
 	planReviewRequest: "settings.events.planReviewRequest",
 	agentError: "settings.events.agentError",
 	jobComplete: "settings.events.jobComplete",
+	subagentComplete: "settings.events.subagentComplete",
 };
 
 /** Channel metadata for rendering the channels section. */

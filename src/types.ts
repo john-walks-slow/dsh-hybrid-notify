@@ -13,7 +13,8 @@ export type NotificationEvent =
 	| "questionRequest"
 	| "planReviewRequest"
 	| "agentError"
-	| "jobComplete";
+	| "jobComplete"
+	| "subagentComplete";
 
 /** A single notification payload that flows through all channels. */
 export interface NotificationPayload {
@@ -71,6 +72,7 @@ export interface NotifyConfig {
 		planReviewRequest: boolean;
 		agentError: boolean;
 		jobComplete: boolean;
+		subagentComplete: boolean;
 	};
 }
 

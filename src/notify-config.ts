@@ -28,7 +28,8 @@ const DEFAULTS: NotifyConfig = {
 		questionRequest: true,
 		planReviewRequest: true,
 		agentError: true,
-		jobComplete: true,
+		jobComplete: false,
+		subagentComplete: false,
 	},
 };
 
