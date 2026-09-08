@@ -3,7 +3,7 @@
  *
  * Follows the SnapshotStore pattern (compatible with useSyncExternalStore).
  *
- * @module dsh-notify/toast-store
+ * @module dsh-hybrid-notify/toast-store
  */
 
 import type { ToastItem, NotificationPayload, SnapshotStore } from "./types";

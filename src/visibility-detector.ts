@@ -4,7 +4,7 @@
  * Uses Page Visibility API + window focus events, following the same pattern
  * as dsh-zen-tracker's foreground-tracker.
  *
- * @module dsh-notify/visibility-detector
+ * @module dsh-hybrid-notify/visibility-detector
  */
 
 import type { VisibilityState, SnapshotStore } from "./types";

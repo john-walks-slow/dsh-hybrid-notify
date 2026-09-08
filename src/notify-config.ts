@@ -1,6 +1,6 @@
 /**
  * NotifyConfigStore — persisted plugin configuration.
- * @module dsh-notify/notify-config
+ * @module dsh-hybrid-notify/notify-config
  */
 
 import type { NotifyConfig, SnapshotStore } from "./types";

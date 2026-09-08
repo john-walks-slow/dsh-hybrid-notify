@@ -2,15 +2,15 @@
  * Host half: registers a route to serve the Service Worker script.
  *
  * SW cannot be registered from a Blob URL (spec requires http/https scheme).
- * So the host serves it at /plugins/dsh-notify/sw.js.
+ * So the host serves it at /plugins/dsh-hybrid-notify/sw.js.
  *
- * @module dsh-notify
+ * @module dsh-hybrid-notify
  */
 
 const name = "notify";
 const inject = ["webServer"];
 
-/** Service Worker source — served at /plugins/dsh-notify/sw.js */
+/** Service Worker source — served at /plugins/dsh-hybrid-notify/sw.js */
 const SW_SOURCE = `
 self.addEventListener("install", (event) => { self.skipWaiting(); });
 self.addEventListener("activate", (event) => { event.waitUntil(self.clients.claim()); });
@@ -36,7 +36,7 @@ function apply(ctx: any) {
 	ctx.effect(() =>
 		ctx.webServer.register({
 			kind: "exact",
-			path: "/plugins/dsh-notify/sw.js",
+			path: "/plugins/dsh-hybrid-notify/sw.js",
 			handler: (_req: any, res: any) => {
 				res.writeHead(200, {
 					"content-type": "application/javascript; charset=utf-8",

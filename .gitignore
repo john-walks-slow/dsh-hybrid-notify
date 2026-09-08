@@ -1,1 +1,4 @@
 node_modules/
+.mnemon/
+lib/
+*.tgz

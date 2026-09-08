@@ -1,12 +1,12 @@
 /**
- * Client plugin body for dsh-notify.
+ * Client plugin body for dsh-hybrid-notify.
  *
  * Registers:
  * 1. Notification engine (global, event-driven) — subscribes to session list
  * 2. Toast container in shell.overlay (renders in-page toasts)
  * 3. Notification settings in settings.section (id="notify", order=60)
  *
- * @module dsh-notify/client
+ * @module dsh-hybrid-notify/client
  */
 
 import { NS, zh, en } from "./locales";

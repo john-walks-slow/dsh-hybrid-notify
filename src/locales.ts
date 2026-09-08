@@ -1,6 +1,6 @@
 /**
  * Locale dictionaries for the `notify` namespace.
- * @module dsh-notify/locales
+ * @module dsh-hybrid-notify/locales
  */
 
 export const NS = "notify";

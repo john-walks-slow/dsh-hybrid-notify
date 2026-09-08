@@ -7,7 +7,7 @@
  *
  * Autoplay policy is handled by unlocking on first user interaction.
  *
- * @module dsh-notify/sound-manager
+ * @module dsh-hybrid-notify/sound-manager
  */
 
 import type { NotificationLevel } from "./types";

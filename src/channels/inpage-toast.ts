@@ -1,6 +1,6 @@
 /**
  * In-page toast channel — shows toasts in the DSH window overlay.
- * @module dsh-notify/channels/inpage-toast
+ * @module dsh-hybrid-notify/channels/inpage-toast
  */
 
 import type { NotificationPayload, SnapshotStore } from "../types";

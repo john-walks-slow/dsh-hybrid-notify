@@ -1,7 +1,7 @@
 {
-  "name": "dsh-notify",
+  "name": "dsh-hybrid-notify",
   "version": "0.1.0",
-  "description": "Multi-channel notification plugin for DeepSeek Harness",
+  "description": "Multi-channel notification plugin for DeepSeek Harness — in-page toasts, PWA system notifications and browser notifications, with synthesized sounds",
   "type": "module",
   "main": "./lib/index.js",
   "exports": {
@@ -10,9 +10,16 @@
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./package.json": "./package.json"
   },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "node build.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "dsh": {
     "bundle": {
@@ -28,6 +35,29 @@
       "platform": "web"
     }
   },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek",
+    "harness",
+    "cordis",
+    "plugin",
+    "notify",
+    "notification",
+    "toast",
+    "pwa",
+    "sound",
+    "deepseek-harness"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/john-walks-slow/dsh-hybrid-notify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/john-walks-slow/dsh-hybrid-notify/issues"
+  },
+  "homepage": "https://github.com/john-walks-slow/dsh-hybrid-notify#readme",
   "peerDependencies": {
     "@deepseek-ai/cordis": "*",
     "react": ">=18"

@@ -2,7 +2,7 @@
  * Web notification channel — uses the browser Notification API directly.
  *
  * This is the fallback when PWA/SW notifications are unavailable.
- * @module dsh-notify/channels/web-notification
+ * @module dsh-hybrid-notify/channels/web-notification
  */
 
 import type { NotificationPayload } from "../types";

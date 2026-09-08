@@ -8,7 +8,7 @@
  *
  * HMR-safe: uses globalThis singleton pattern (same as dsh-zen-tracker).
  *
- * @module dsh-notify/notification-engine
+ * @module dsh-hybrid-notify/notification-engine
  */
 
 import type { Context } from "@deepseek-ai/cordis";

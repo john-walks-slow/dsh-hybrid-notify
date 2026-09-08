@@ -1,6 +1,6 @@
 /**
  * Toast — single toast notification component.
- * @module dsh-notify/components/Toast
+ * @module dsh-hybrid-notify/components/Toast
  */
 
 import { memo, useEffect, useRef, useState } from "react";

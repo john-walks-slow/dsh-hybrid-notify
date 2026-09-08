@@ -1,6 +1,6 @@
 /**
- * Shared type definitions for dsh-notify.
- * @module dsh-notify/types
+ * Shared type definitions for dsh-hybrid-notify.
+ * @module dsh-hybrid-notify/types
  */
 
 /** Notification severity / icon type. */

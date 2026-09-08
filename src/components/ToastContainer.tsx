@@ -2,7 +2,7 @@
  * ToastContainer — registered into the `shell.overlay` slot.
  * Renders the toast stack in the bottom-right corner.
  *
- * @module dsh-notify/components/ToastContainer
+ * @module dsh-hybrid-notify/components/ToastContainer
  */
 
 import { useSyncExternalStore, memo } from "react";

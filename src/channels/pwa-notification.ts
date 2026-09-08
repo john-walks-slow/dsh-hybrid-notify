@@ -1,16 +1,16 @@
 /**
  * PWA notification channel — uses Service Worker + Notifications API.
  *
- * The SW script is served by the host half at /plugins/dsh-notify/sw.js.
+ * The SW script is served by the host half at /plugins/dsh-hybrid-notify/sw.js.
  * (Blob URL registration is not spec-compliant and fails in all modern browsers.)
  *
- * @module dsh-notify/channels/pwa-notification
+ * @module dsh-hybrid-notify/channels/pwa-notification
  */
 
 import type { NotificationPayload } from "../types";
 
-const SW_URL = "/plugins/dsh-notify/sw.js";
-const SW_SCOPE = "/plugins/dsh-notify/";
+const SW_URL = "/plugins/dsh-hybrid-notify/sw.js";
+const SW_SCOPE = "/plugins/dsh-hybrid-notify/";
 
 export class PwaNotificationChannel {
 	private registration: ServiceWorkerRegistration | null = null;

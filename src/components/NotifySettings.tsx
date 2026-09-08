@@ -1,7 +1,7 @@
 /**
  * NotifySettingsSection — settings UI registered into `settings.section`.
  *
- * @module dsh-notify/components/NotifySettings
+ * @module dsh-hybrid-notify/components/NotifySettings
  */
 
 import { useSyncExternalStore, useState, useCallback } from "react";
