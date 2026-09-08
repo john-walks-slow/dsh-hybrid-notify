@@ -29,6 +29,8 @@ interface SessionSummaryLike {
 	displayTitle: string;
 	running: boolean;
 	pendingInteraction?: "approval" | "plan-review" | "question" | undefined;
+	origin?: string;
+	parentId?: string;
 }
 
 interface JobViewLike {
@@ -229,7 +231,13 @@ function createEngine(
 
 			// ── Turn complete: running → idle ──
 			if (prev.running === true && summary.running === false) {
-				notify("turnComplete", id, t("notify.turnComplete"), getSessionTitle(snap, id), "success");
+				// Subagent completions are classified as jobComplete (background task),
+				// so the "后台任务完成" / "Background job complete" toggle controls them
+				if (summary.origin === "subagent") {
+					notify("jobComplete", id, t("notify.jobComplete"), getSessionTitle(snap, id), "success");
+				} else {
+					notify("turnComplete", id, t("notify.turnComplete"), getSessionTitle(snap, id), "success");
+				}
 			}
 
 			// ── Approval/Question/Plan-review request: idle → pending ──
