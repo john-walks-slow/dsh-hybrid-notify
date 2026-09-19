@@ -1,0 +1,13 @@
+# awesome-dsh-plugin 投稿草稿（data/plugins/john-walks-slow__dsh-hybrid-notify.yml）
+# 前置：仓库满 1 天（commit 最早 2026-09-08/09，today 2026-09-19 已满足；PR 时以 GitHub 仓库创建日期为准）。
+# 流程：fork awesome-dsh-plugin → 只加这一个文件 → PR。README 勿手改（脚本生成）。
+# 注意：description 含 ": " 必须加引号；描述会被对着代码核，只写实际行为（已对照 src 核实）。
+# 搜索机制（dsh-market 实测源码）：索引 name/npm/owner/description(en+zh)/category，
+# 不索引 README 与 npm keywords——双语描述是唯一搜索优化面，keyword 要密集。
+# 提交前记得：仓库 topic 已打 dsh-plugin。
+url: https://github.com/john-walks-slow/dsh-hybrid-notify
+name: john-walks-slow/dsh-hybrid-notify
+category: notify
+description:
+  en: 'Multi-channel notification plugin for DeepSeek Harness: dispatches in-page toasts in the foreground and PWA system notifications (Service Worker) or browser notifications in the background, with per-event toggles for task complete, approval request, question, plan review and errors, persistent notifications, and Web Audio synthesized alert sounds without audio files.'
+  zh: 'DeepSeek Harness 多通道通知插件：前台弹页面内 toast，后台按可用性切换 PWA 系统通知（Service Worker）或浏览器通知兜底；任务完成、审批请求、提问、计划评审、出错等事件可逐项开关，重要通知驻留不消失，并用 Web Audio 实时合成提示音效、零音频文件零网络上报。'
