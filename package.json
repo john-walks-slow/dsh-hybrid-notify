@@ -1,6 +1,6 @@
 {
   "name": "dsh-hybrid-notify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Multi-channel notification plugin for DeepSeek Harness — in-page toasts, PWA system notifications and browser notifications, with Web Audio synthesized sounds and per-event toggles. dsh-hybrid-notify：DeepSeek Harness 多通道通知插件——按窗口可见性自动切换页面内 toast / PWA 系统通知 / 浏览器通知，附带 Web Audio 合成音效与事件级开关。",
   "type": "module",
   "main": "./lib/index.js",
