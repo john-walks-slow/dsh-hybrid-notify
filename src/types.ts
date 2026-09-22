@@ -90,3 +90,13 @@ export interface VisibilityState {
 	hasFocus: boolean;
 	isForeground: boolean;
 }
+
+/**
+ * Visibility detector store, carrying the cleanup hook for its global
+ * listeners. `_cleanup` is required so the engine's dispose() calls it
+ * type-safely — a rename here becomes a compile error, not a silent leak.
+ */
+export interface VisibilityDetectorStore extends SnapshotStore<VisibilityState> {
+	/** Remove the detector's global listeners (visibilitychange/focus/blur). */
+	_cleanup: () => void;
+}

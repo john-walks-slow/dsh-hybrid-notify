@@ -12,10 +12,9 @@
  */
 
 import type { Context } from "@deepseek-ai/cordis";
-import type { NotifyConfig, NotificationPayload, NotificationEvent, NotificationLevel, SnapshotStore, VisibilityState } from "./types";
+import type { NotifyConfig, NotificationPayload, NotificationEvent, NotificationLevel, SnapshotStore, VisibilityDetectorStore } from "./types";
 import type { NotifyConfigStore } from "./notify-config";
 import type { ToastStore } from "./toast-store";
-import type { VisibilityDetector } from "./visibility-detector";
 import { SoundManager } from "./sound-manager";
 import { InPageToastChannel } from "./channels/inpage-toast";
 import { PwaNotificationChannel } from "./channels/pwa-notification";
@@ -54,11 +53,14 @@ interface EngineHandle {
 export function initNotificationEngine(
 	ctx: Context,
 	configStore: NotifyConfigStore,
-	visibilityDetector: SnapshotStore<VisibilityState>,
+	visibilityDetector: VisibilityDetectorStore,
 	toastStore: ToastStore,
 ): ToastStore {
 	const g = globalThis as any;
 	if (g[WINDOW_KEY] && g[WINDOW_KEY].alive) {
+		// The singleton engine survives, so this apply()'s fresh detector is
+		// redundant — release its listeners instead of leaking them.
+		visibilityDetector._cleanup();
 		return g[WINDOW_KEY].toastStore;
 	}
 	if (g[WINDOW_KEY]) g[WINDOW_KEY].dispose();
@@ -69,7 +71,7 @@ export function initNotificationEngine(
 function createEngine(
 	ctx: Context,
 	configStore: NotifyConfigStore,
-	visibilityDetector: SnapshotStore<VisibilityState>,
+	visibilityDetector: VisibilityDetectorStore,
 	toastStore: ToastStore,
 ): EngineHandle & { toastStore: ToastStore } {
 	const sessions = (ctx as any).sessions as {
@@ -254,6 +256,7 @@ function createEngine(
 		}
 
 		// ── Job completions: diff jobsBySession ──
+		const liveSessionIds = new Set(Object.keys(snap.byId));
 		for (const [sessionId, jobList] of Object.entries(snap.jobsBySession)) {
 			const prevJobMap = prevJobs[sessionId] ?? new Map<string, JobViewLike>();
 			const currJobMap = new Map<string, JobViewLike>();
@@ -266,6 +269,11 @@ function createEngine(
 				}
 			}
 			prevJobs[sessionId] = currJobMap;
+		}
+		// Drop job maps of sessions that no longer exist — without this,
+		// prevJobs grows without bound as sessions are created and deleted.
+		for (const id of Object.keys(prevJobs)) {
+			if (!liveSessionIds.has(id)) delete prevJobs[id];
 		}
 
 		// Update session states for next diff
@@ -304,6 +312,9 @@ function createEngine(
 			handle.alive = false;
 			unsubSessions();
 			unlockCleanup();
+			// Remove the visibility detector's 3 global listeners (leaked on every
+			// engine re-init/HMR otherwise — the detector is per-engine, not global).
+			visibilityDetector._cleanup();
 			navigator.serviceWorker?.removeEventListener?.("message", onMessage);
 			clearInterval(cleanupTimer);
 			(toastStore as any).clearAll?.();

@@ -7,11 +7,11 @@
  * @module dsh-hybrid-notify/visibility-detector
  */
 
-import type { VisibilityState, SnapshotStore } from "./types";
+import type { VisibilityDetectorStore, VisibilityState } from "./types";
 
 type Listener = () => void;
 
-export function createVisibilityDetector(): SnapshotStore<VisibilityState> {
+export function createVisibilityDetector(): VisibilityDetectorStore {
 	let state: VisibilityState = computeState();
 	const listeners = new Set<Listener>();
 
@@ -63,11 +63,11 @@ export function createVisibilityDetector(): SnapshotStore<VisibilityState> {
 			notify();
 		},
 		// expose cleanup via a custom property
-		...({ _cleanup: () => {
+		_cleanup: () => {
 			document.removeEventListener("visibilitychange", onVisibilityChange);
 			window.removeEventListener("focus", onFocus);
 			window.removeEventListener("blur", onBlur);
-		} } as any),
+		},
 	};
 }
 
