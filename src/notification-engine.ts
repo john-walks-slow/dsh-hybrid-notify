@@ -42,7 +42,8 @@ interface JobViewLike {
 interface SessionListSnapshotLike {
 	current?: string;
 	byId: Record<string, SessionSummaryLike>;
-	jobsBySession: Record<string, readonly JobViewLike[]>;
+	/** Optional: DSH 0.1.7 removed job views from the session list snapshot. */
+	jobsBySession?: Record<string, readonly JobViewLike[]>;
 }
 
 interface EngineHandle {
@@ -257,7 +258,7 @@ function createEngine(
 
 		// ── Job completions: diff jobsBySession ──
 		const liveSessionIds = new Set(Object.keys(snap.byId));
-		for (const [sessionId, jobList] of Object.entries(snap.jobsBySession)) {
+		for (const [sessionId, jobList] of Object.entries(snap.jobsBySession ?? {})) {
 			const prevJobMap = prevJobs[sessionId] ?? new Map<string, JobViewLike>();
 			const currJobMap = new Map<string, JobViewLike>();
 			for (const job of jobList) {
