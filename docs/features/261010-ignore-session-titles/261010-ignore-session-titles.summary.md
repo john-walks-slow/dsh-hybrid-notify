@@ -29,7 +29,7 @@
 - textarea 文本为组件本地态，仅解析后的 patterns 落库：保证行尾换行、空行在输入过程中不被吞掉。
 - 清空输入框表示「不忽略任何会话」，默认规则靠「恢复默认」一键找回。
 - `docs/screenshot-settings.png` 尚未包含新栏目，如需同步截图可另行处理。
-- 未改动版本号（0.1.2）：本次未发布，发版时再决定是否进 0.2.0。
+- 已发布：npm `dsh-hybrid-notify@0.2.0`（免 2FA 挑战直接 PUBLISHED_OK），GitHub `main` + tag `v0.2.0` 已推送。
 
 ## 检视
 
