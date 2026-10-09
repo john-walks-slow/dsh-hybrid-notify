@@ -8,6 +8,7 @@ import { useSyncExternalStore, useState, useCallback } from "react";
 import type { NotifyConfig, NotificationEvent, NotificationPayload } from "../types";
 import type { NotifyConfigStore } from "../notify-config";
 import type { ToastStore } from "../toast-store";
+import { DEFAULT_IGNORE_PATTERNS, findInvalidPatterns, parsePatternLines } from "../ignore-matcher";
 import { SoundManager } from "../sound-manager";
 import { PwaNotificationChannel } from "../channels/pwa-notification";
 import { WebNotificationChannel } from "../channels/web-notification";
@@ -56,6 +57,10 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 		() => configStore.getSnapshot(),
 	);
 	const [soundMgr] = useState(() => new SoundManager());
+	// The textarea keeps its own text so pending newlines/blank lines survive typing;
+	// only the parsed patterns are persisted.
+	const [ignoreText, setIgnoreText] = useState(() => configStore.getSnapshot().ignore.patterns.join("\n"));
+	const invalidPatterns = findInvalidPatterns(ignoreText.split("\n"));
 
 	const update = useCallback((patch: Partial<NotifyConfig>) => {
 		configStore.update((prev) => ({ ...prev, ...patch }));
@@ -71,6 +76,12 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 
 	const updateEvent = useCallback((key: NotificationEvent, val: boolean) => {
 		configStore.update((prev) => ({ ...prev, events: { ...prev.events, [key]: val } }));
+	}, [configStore]);
+
+	const updateIgnoreText = useCallback((text: string) => {
+		setIgnoreText(text);
+		const patterns = parsePatternLines(text);
+		configStore.update((prev) => ({ ...prev, ignore: { patterns } }));
 	}, [configStore]);
 
 	const ensureSoundUnlocked = useCallback(() => {
@@ -181,6 +192,20 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 		flexShrink: 0,
 	};
 
+	const textareaStyle: React.CSSProperties = {
+		width: "100%",
+		minHeight: "60px",
+		resize: "vertical",
+		boxSizing: "border-box",
+		padding: "6px 8px",
+		borderRadius: "4px",
+		border: "1px solid var(--dsw-alias-border-l1)",
+		background: "var(--dsw-alias-bg-mask-1)",
+		color: "var(--dsw-alias-label-primary)",
+		fontSize: "12px",
+		fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+	};
+
 	return (
 		<div style={{ maxWidth: "480px", padding: "4px 0" }}>
 			{/* Master toggle */}
@@ -288,6 +313,38 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 					</button>
 				</div>
 			))}
+
+			{/* Ignored sessions */}
+			<div style={sectionTitleStyle}>{t("settings.ignore")}</div>
+			<div style={{ ...rowStyle, flexDirection: "column" as const, alignItems: "stretch", gap: "6px" }}>
+				<div>
+					<div style={labelStyle}>{t("settings.ignore.title")}</div>
+					<div style={descStyle}>{t("settings.ignore.desc")}</div>
+				</div>
+				<textarea
+					style={textareaStyle}
+					value={ignoreText}
+					onChange={(e) => updateIgnoreText(e.target.value)}
+					placeholder={t("settings.ignore.placeholder")}
+					spellCheck={false}
+					rows={3}
+					aria-label={t("settings.ignore.title")}
+				/>
+				<div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
+					<div style={{
+						...descStyle,
+						marginTop: 0,
+						color: invalidPatterns.length ? "var(--dsw-alias-state-warn-primary)" : "var(--dsw-alias-label-tertiary)",
+					}}>
+						{invalidPatterns.length
+							? `${t("settings.ignore.invalid")}${invalidPatterns.join("  ")}`
+							: t("settings.ignore.hint")}
+					</div>
+					<button style={miniBtnStyle} onClick={() => updateIgnoreText(DEFAULT_IGNORE_PATTERNS.join("\n"))}>
+						{t("settings.ignore.reset")}
+					</button>
+				</div>
+			</div>
 		</div>
 	);
 }

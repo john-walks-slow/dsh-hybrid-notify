@@ -4,11 +4,16 @@
  */
 
 import type { NotifyConfig, SnapshotStore } from "./types";
+import { deepMerge } from "./deep-merge";
+import { DEFAULT_IGNORE_PATTERNS } from "./ignore-matcher";
 
 const PERSIST_KEY = "dsh.notify.config";
 
 const DEFAULTS: NotifyConfig = {
 	enabled: true,
+	ignore: {
+		patterns: [...DEFAULT_IGNORE_PATTERNS],
+	},
 	channels: {
 		inpage: true,
 		pwa: true,
@@ -42,26 +47,9 @@ export function createNotifyConfigStore(): SnapshotStore<NotifyConfig> {
 	function loadInitial(): NotifyConfig {
 		try {
 			const raw = localStorage.getItem(PERSIST_KEY);
-			if (raw) {
-				const parsed = JSON.parse(raw);
-				return deepMerge(DEFAULTS, parsed);
-			}
+			if (raw) return deepMerge(DEFAULTS, JSON.parse(raw));
 		} catch { /* ignore */ }
 		return { ...DEFAULTS };
-	}
-
-	function deepMerge(base: any, override: any): any {
-		if (typeof base !== "object" || base === null) return override ?? base;
-		if (typeof override !== "object" || override === null) return override ?? base;
-		const out: any = { ...base };
-		for (const key of Object.keys(override)) {
-			if (key in base) {
-				out[key] = deepMerge(base[key], override[key]);
-			} else {
-				out[key] = override[key];
-			}
-		}
-		return out;
 	}
 
 	function persist() {

@@ -15,6 +15,7 @@ import type { Context } from "@deepseek-ai/cordis";
 import type { NotifyConfig, NotificationPayload, NotificationEvent, NotificationLevel, SnapshotStore, VisibilityDetectorStore } from "./types";
 import type { NotifyConfigStore } from "./notify-config";
 import type { ToastStore } from "./toast-store";
+import { isTitleIgnored } from "./ignore-matcher";
 import { SoundManager } from "./sound-manager";
 import { InPageToastChannel } from "./channels/inpage-toast";
 import { PwaNotificationChannel } from "./channels/pwa-notification";
@@ -194,6 +195,9 @@ function createEngine(
 	function notify(event: NotificationEvent, sessionId: string, title: string, body: string | undefined, level: NotificationPayload["level"]): void {
 		const config = configStore.getSnapshot();
 		if (!config.enabled || !config.events[event]) return;
+
+		// Silenced sessions (default: DSH-IM Telegram) get neither notification nor sound.
+		if (isTitleIgnored(getSessionTitle(sessions.list.getSnapshot(), sessionId), config.ignore.patterns)) return;
 
 		const fp = makeFingerprint(sessionId, event);
 		if (notifiedSet.has(fp)) return;

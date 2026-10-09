@@ -35,6 +35,7 @@
   - Agent error
   - Background job complete
 - **Per-channel toggles** — enable/disable in-page, PWA, or browser notifications
+- **Session ignore rules** — silence whole sessions by title regex (default: DSH-IM `Telegram ·` sessions)
 - **Sound settings** — master toggle, volume slider, foreground playback toggle, test button
 - **Persistent notifications** — important events (approval requests, errors) stay visible until dismissed
 - **HMR-safe** — survives hot-reload during development
@@ -84,6 +85,18 @@ Open **Settings → Notifications** in the DSH Web UI. All settings are persiste
 | Background job complete | OFF | A background bash job finishes |
 
 Notifications are suppressed for the session you are currently viewing in the foreground.
+
+### Ignored sessions
+
+The **Ignored sessions** box takes **one regular expression per line**; a session whose title matches gets no notification and no sound.
+
+| Default rule | Effect |
+|--------------|--------|
+| `^Telegram ·` | Ignore DSH-IM Telegram sessions |
+
+- Patterns are JavaScript `RegExp` sources, case-sensitive. Lines that fail to compile are skipped and reported under the box.
+- **Clearing the box ignores nothing**; the *Reset to default* button restores the shipped rule.
+- Add one line per channel to silence the rest of dsh-im: `^WeChat ·`, `^Feishu ·`, `^DingTalk ·`, `^WeCom ·`, `^QQ ·`, `^Slack ·`, `^Discord ·`, `^WhatsApp ·`.
 
 ### Sounds
 

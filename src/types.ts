@@ -46,6 +46,11 @@ export interface ToastItem extends NotificationPayload {
 export interface NotifyConfig {
 	/** Master switch. */
 	enabled: boolean;
+	/** Sessions to silence, matched by title. */
+	ignore: {
+		/** Regular expressions, one source per entry; a match silences the session. */
+		patterns: string[];
+	};
 	/** Per-channel toggles. */
 	channels: {
 		inpage: boolean;
