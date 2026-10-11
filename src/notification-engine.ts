@@ -150,9 +150,7 @@ function createEngine(
 	const openSession = (sessionId?: string) => {
 		window.focus();
 		if (sessionId) {
-			try {
-				(ctx as any).sessions?.open?.(sessionId);
-			} catch { /* ignore */ }
+			(ctx as any).uiWorkspace.openSession(sessionId);
 		}
 	};
 

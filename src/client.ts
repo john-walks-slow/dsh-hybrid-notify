@@ -20,7 +20,7 @@ import { ToastContainer } from "./components/ToastContainer";
 import { NotifySettingsSection } from "./components/NotifySettings";
 
 const name = "notify";
-const inject = ["slots", "sessions", "locale"];
+const inject = ["slots", "sessions", "locale", "uiWorkspace"];
 
 function apply(ctx: any) {
 	// ── Locale dictionaries ──────────────────────────────────────────────
@@ -39,6 +39,14 @@ function apply(ctx: any) {
 	// ── Notification engine (HMR-safe singleton) ────────────────────────
 	const engineToastStore = initNotificationEngine(ctx, configStore, visibilityDetector, toastStore);
 
+	const targetSessionId = new URL(window.location.href).searchParams.get("notifySessionId");
+	if (targetSessionId) {
+		ctx.uiWorkspace.openSession(targetSessionId);
+		const url = new URL(window.location.href);
+		url.searchParams.delete("notifySessionId");
+		window.history.replaceState(window.history.state, "", url.href);
+	}
+
 	// ── Channel references for settings page ─────────────────────────────
 	const pwaChannel = new PwaNotificationChannel();
 	const webChannel = new WebNotificationChannel();
@@ -53,9 +61,7 @@ function apply(ctx: any) {
 		inject: () => ({
 			toastStore: engineToastStore,
 			onSessionClick: (sessionId: string) => {
-				try {
-					ctx.sessions?.open?.(sessionId);
-				} catch { /* ignore */ }
+				ctx.uiWorkspace.openSession(sessionId);
 			},
 		}),
 	}, ToastContainer));

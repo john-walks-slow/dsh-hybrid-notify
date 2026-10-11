@@ -26,7 +26,11 @@ self.addEventListener("notificationclick", (event) => {
           return client.focus();
         }
       }
-      if (self.clients.openWindow) return self.clients.openWindow("/");
+      if (self.clients.openWindow) {
+        const target = new URL("/", self.location.origin);
+        if (sessionId) target.searchParams.set("notifySessionId", sessionId);
+        return self.clients.openWindow(target.href);
+      }
     })
   );
 });
