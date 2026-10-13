@@ -204,3 +204,7 @@ MIT
 
 - [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) —— DSH 插件精选列表
 - [dsh-notify-web](https://www.npmjs.com/package/dsh-notify-web) —— 基础通知插件（单通道、无音效）
+
+## 社区
+
+- 感谢 [LINUX DO](https://linux.do/) 社区提供的交流环境。

@@ -204,3 +204,7 @@ MIT
 
 - [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) — curated list of DSH plugins
 - [dsh-notify-web](https://www.npmjs.com/package/dsh-notify-web) — basic notification plugin (single channel, no sound)
+
+## Community
+
+- Thanks to the [LINUX DO](https://linux.do/) community for providing the discussion environment.
