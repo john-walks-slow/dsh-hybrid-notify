@@ -22,6 +22,7 @@ const DEFAULTS: NotifyConfig = {
 	persistent: {
 		enabled: true,
 	},
+	dismissOnRead: true,
 	sound: {
 		enabled: true,
 		volume: 0.5,

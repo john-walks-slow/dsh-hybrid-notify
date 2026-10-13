@@ -51,6 +51,38 @@ const CHANNEL_LABELS: Record<ChannelKey, string> = {
 	web: "settings.channels.web",
 };
 
+const toggleStyle = (on: boolean): React.CSSProperties => ({
+	position: "relative",
+	width: "36px",
+	height: "20px",
+	borderRadius: "10px",
+	background: on ? "var(--dsw-alias-brand-primary)" : "var(--dsw-alias-bg-mask-1)",
+	cursor: "pointer",
+	transition: "background 0.2s ease",
+	border: "none",
+	flexShrink: 0,
+});
+
+const knobStyle = (on: boolean): React.CSSProperties => ({
+	position: "absolute",
+	top: "2px",
+	left: on ? "18px" : "2px",
+	width: "16px",
+	height: "16px",
+	borderRadius: "50%",
+	background: "#fff",
+	transition: "left 0.2s ease",
+});
+
+/** Switch control: carries switch semantics so assistive tech reads the state. */
+function Toggle({ on, label, onChange }: { on: boolean; label: string; onChange: () => void }) {
+	return (
+		<button type="button" role="switch" aria-checked={on} aria-label={label} style={toggleStyle(on)} onClick={onChange}>
+			<div style={knobStyle(on)} />
+		</button>
+	);
+}
+
 export function NotifySettingsSection({ configStore, toastStore, pwaChannel, webChannel, t }: NotifySettingsProps) {
 	const config = useSyncExternalStore(
 		(fn) => configStore.subscribe(fn),
@@ -130,29 +162,6 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 	}, []);
 
 	// ── shared styles ──
-	const toggleStyle = (on: boolean): React.CSSProperties => ({
-		position: "relative",
-		width: "36px",
-		height: "20px",
-		borderRadius: "10px",
-		background: on ? "var(--dsw-alias-brand-primary)" : "var(--dsw-alias-bg-mask-1)",
-		cursor: "pointer",
-		transition: "background 0.2s ease",
-		border: "none",
-		flexShrink: 0,
-	});
-
-	const knobStyle = (on: boolean): React.CSSProperties => ({
-		position: "absolute",
-		top: "2px",
-		left: on ? "18px" : "2px",
-		width: "16px",
-		height: "16px",
-		borderRadius: "50%",
-		background: "#fff",
-		transition: "left 0.2s ease",
-	});
-
 	const rowStyle: React.CSSProperties = {
 		display: "flex",
 		alignItems: "center",
@@ -214,9 +223,7 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 					<div style={labelStyle}>{t("settings.enabled")}</div>
 					<div style={descStyle}>{t("settings.desc")}</div>
 				</div>
-				<button style={toggleStyle(config.enabled)} onClick={() => update({ enabled: !config.enabled })} aria-label={t("settings.enabled")}>
-					<div style={knobStyle(config.enabled)} />
-				</button>
+				<Toggle on={config.enabled} label={t("settings.enabled")} onChange={() => update({ enabled: !config.enabled })} />
 			</div>
 
 			{/* Channels — each row has toggle + permission + test */}
@@ -244,9 +251,7 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 							<button style={miniBtnStyle} onClick={() => testChannel(key)}>
 								{t("settings.channels.test")}
 							</button>
-							<button style={toggleStyle(config.channels[key])} onClick={() => updateChannels(key, !config.channels[key])} aria-label={t(CHANNEL_LABELS[key])}>
-								<div style={knobStyle(config.channels[key])} />
-							</button>
+							<Toggle on={config.channels[key]} label={t(CHANNEL_LABELS[key])} onChange={() => updateChannels(key, !config.channels[key])} />
 						</div>
 					</div>
 				);
@@ -259,18 +264,24 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 					<div style={labelStyle}>{t("settings.persistent.enabled")}</div>
 					<div style={descStyle}>{t("settings.persistent.desc")}</div>
 				</div>
-				<button style={toggleStyle(config.persistent.enabled)} onClick={() => update({ persistent: { ...config.persistent, enabled: !config.persistent.enabled } })} aria-label={t("settings.persistent.enabled")}>
-					<div style={knobStyle(config.persistent.enabled)} />
-				</button>
+				<Toggle on={config.persistent.enabled} label={t("settings.persistent.enabled")} onChange={() => update({ persistent: { ...config.persistent, enabled: !config.persistent.enabled } })} />
+			</div>
+
+			{/* Dismiss system notifications once the session is read */}
+			<div style={sectionTitleStyle}>{t("settings.dismiss")}</div>
+			<div style={rowStyle}>
+				<div>
+					<div style={labelStyle}>{t("settings.dismiss.enabled")}</div>
+					<div style={descStyle}>{t("settings.dismiss.desc")}</div>
+				</div>
+				<Toggle on={config.dismissOnRead} label={t("settings.dismiss.enabled")} onChange={() => update({ dismissOnRead: !config.dismissOnRead })} />
 			</div>
 
 			{/* Sound */}
 			<div style={sectionTitleStyle}>{t("settings.sound")}</div>
 			<div style={rowStyle}>
 				<div style={labelStyle}>{t("settings.sound.enabled")}</div>
-				<button style={toggleStyle(config.sound.enabled)} onClick={() => updateSound("enabled", !config.sound.enabled)} aria-label={t("settings.sound.enabled")}>
-					<div style={knobStyle(config.sound.enabled)} />
-				</button>
+				<Toggle on={config.sound.enabled} label={t("settings.sound.enabled")} onChange={() => updateSound("enabled", !config.sound.enabled)} />
 			</div>
 			{config.sound.enabled && (
 				<div style={{ ...rowStyle, flexDirection: "column" as const, alignItems: "stretch", gap: "8px" }}>
@@ -297,9 +308,7 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 						<div style={labelStyle}>{t("settings.sound.foregroundSound")}</div>
 						<div style={descStyle}>{t("settings.sound.foregroundSoundDesc")}</div>
 					</div>
-					<button style={toggleStyle(config.sound.foregroundSound)} onClick={() => updateSound("foregroundSound", !config.sound.foregroundSound)} aria-label={t("settings.sound.foregroundSound")}>
-						<div style={knobStyle(config.sound.foregroundSound)} />
-					</button>
+					<Toggle on={config.sound.foregroundSound} label={t("settings.sound.foregroundSound")} onChange={() => updateSound("foregroundSound", !config.sound.foregroundSound)} />
 				</div>
 			)}
 
@@ -308,9 +317,7 @@ export function NotifySettingsSection({ configStore, toastStore, pwaChannel, web
 			{EVENT_KEYS.map((event) => (
 				<div key={event} style={rowStyle}>
 					<div style={labelStyle}>{t(EVENT_LABELS[event])}</div>
-					<button style={toggleStyle(config.events[event])} onClick={() => updateEvent(event, !config.events[event])} aria-label={t(EVENT_LABELS[event])}>
-						<div style={knobStyle(config.events[event])} />
-					</button>
+					<Toggle on={config.events[event]} label={t(EVENT_LABELS[event])} onChange={() => updateEvent(event, !config.events[event])} />
 				</div>
 			))}
 

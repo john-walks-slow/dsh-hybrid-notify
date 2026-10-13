@@ -38,6 +38,7 @@
 - **Session ignore rules** — silence whole sessions by title regex (default: DSH-IM `Telegram ·` sessions)
 - **Sound settings** — master toggle, volume slider, foreground playback toggle, test button
 - **Persistent notifications** — important events (approval requests, errors) stay visible until dismissed
+- **Cleared once read** — a session's system notifications are retracted when its dot is cleared, or when you return to the window showing that session
 - **HMR-safe** — survives hot-reload during development
 - **Autoplay policy compliant** — unlocks audio context on first user interaction
 
@@ -85,6 +86,15 @@ Open **Settings → Notifications** in the DSH Web UI. All settings are persiste
 | Background job complete | OFF | A background bash job finishes |
 
 Notifications are suppressed for the session you are currently viewing in the foreground.
+
+### Cleared once read
+
+A system notification is retracted together with the UI state it mirrors (on by default; switch it off in Settings → Notifications → *Clear when read*):
+
+- **The dot clears** — the session's sidebar status dot goes away: a completion dot is acknowledged (the session enters the main view, or starts running again), or a pending approval / question dot is resolved.
+- **The window comes back** — the window returns to the foreground while the main view already shows that session.
+
+In-page toasts are unaffected — they are right in front of you and either expire or close on click.
 
 ### Ignored sessions
 

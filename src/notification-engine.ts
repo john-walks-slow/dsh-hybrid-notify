@@ -40,6 +40,18 @@ interface JobViewLike {
 	status: "running" | "stopping" | "completed" | "killed" | "failed";
 }
 
+/** Per-session UI status behind the sidebar dot (`uiSession.sessionStatus`). */
+interface SessionStatusLike {
+	running?: boolean;
+	pendingInteraction?: unknown;
+	completionUnread: boolean;
+}
+
+interface SessionStatusSource {
+	getSnapshot(): ReadonlyMap<string, SessionStatusLike>;
+	subscribe(fn: () => void): () => void;
+}
+
 interface SessionListSnapshotLike {
 	current?: string;
 	byId: Record<string, SessionSummaryLike>;
@@ -80,6 +92,8 @@ function createEngine(
 		list: SnapshotStore<SessionListSnapshotLike>;
 	};
 	const t = (ctx as any).locale.bind("notify") as (key: string, params?: Record<string, any>) => string;
+	/** The sidebar dot state: what the user actually sees and acknowledges. */
+	const uiSessionStatus = ((ctx as any).uiSession as { sessionStatus: SessionStatusSource }).sessionStatus;
 
 	// ── Channels ────────────────────────────────────────────────────
 	const inPageChannel = new InPageToastChannel(toastStore);
@@ -221,6 +235,16 @@ function createEngine(
 		dispatchNotification(payload);
 	}
 
+	/**
+	 * Retract the session's system notifications: its UI dot is gone, so a
+	 * lingering entry in the notification shade is stale information.
+	 */
+	function dismissSessionNotifications(sessionId: string): void {
+		if (!configStore.getSnapshot().dismissOnRead) return;
+		void pwaChannel.dismissSession(sessionId);
+		webChannel.dismissSession(sessionId);
+	}
+
 	function getSessionTitle(snap: SessionListSnapshotLike, sessionId: string): string {
 		const s = snap.byId[sessionId];
 		return s?.displayTitle || s?.title || sessionId.slice(0, 8);
@@ -291,6 +315,33 @@ function createEngine(
 	// ── Subscribe ──────────────────────────────────────────────────
 	const unsubSessions = sessions.list.subscribe(() => check());
 
+	// ── Retract system notifications for sessions read in the UI ────
+	// A session asks for attention while its sidebar dot is up: completion
+	// unread (it finished outside the main view) or a pending interaction.
+	let needsAttention = new Set<string>();
+	const syncAttention = () => {
+		const next = new Set<string>();
+		for (const [id, status] of uiSessionStatus.getSnapshot()) {
+			if (status.completionUnread || status.pendingInteraction !== undefined) next.add(id);
+		}
+		for (const id of needsAttention) if (!next.has(id)) dismissSessionNotifications(id);
+		needsAttention = next;
+	};
+	const unsubStatus = uiSessionStatus.subscribe(syncAttention);
+	syncAttention();
+
+	// Coming back to the window that already shows the session counts as read
+	// too — that session gets no dot, but its notification is just as stale.
+	let wasForeground = visibilityDetector.getSnapshot().isForeground;
+	const unsubVisibility = visibilityDetector.subscribe(() => {
+		const isForeground = visibilityDetector.getSnapshot().isForeground;
+		if (isForeground && !wasForeground) {
+			const current = sessions.list.getSnapshot().current;
+			if (current) dismissSessionNotifications(current);
+		}
+		wasForeground = isForeground;
+	});
+
 	// Listen for SW notification clicks — SW postMessages back, we call openSession
 	const onMessage = (event: MessageEvent) => {
 		const data = event.data;
@@ -314,6 +365,8 @@ function createEngine(
 		dispose() {
 			handle.alive = false;
 			unsubSessions();
+			unsubStatus();
+			unsubVisibility();
 			unlockCleanup();
 			// Remove the visibility detector's 3 global listeners (leaked on every
 			// engine re-init/HMR otherwise — the detector is per-engine, not global).

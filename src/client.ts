@@ -20,7 +20,7 @@ import { ToastContainer } from "./components/ToastContainer";
 import { NotifySettingsSection } from "./components/NotifySettings";
 
 const name = "notify";
-const inject = ["slots", "sessions", "locale", "uiWorkspace"];
+const inject = ["slots", "sessions", "locale", "uiWorkspace", "uiSession"];
 
 function apply(ctx: any) {
 	// ── Locale dictionaries ──────────────────────────────────────────────

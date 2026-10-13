@@ -62,6 +62,11 @@ export interface NotifyConfig {
 		/** Use requireInteraction so important notifications stay until dismissed. */
 		enabled: boolean;
 	};
+	/**
+	 * Retract a session's system notifications once it has been read in the UI:
+	 * its status dot cleared, or the window came back to the foreground showing it.
+	 */
+	dismissOnRead: boolean;
 	/** Sound settings. */
 	sound: {
 		enabled: boolean;
